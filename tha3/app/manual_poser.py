@@ -1,5 +1,6 @@
 import argparse
 import logging
+import math
 import os
 import sys
 from typing import List
@@ -15,7 +16,7 @@ from tha3.poser.modes.load_poser import load_poser
 from tha3.poser.poser import Poser, PoseParameterCategory, PoseParameterGroup
 from tha3.util import extract_pytorch_image_from_filelike, rgba_to_numpy_image, grid_change_to_numpy_image, \
     rgb_to_numpy_image, resize_PIL_image, extract_PIL_image_from_filelike, extract_pytorch_image_from_PIL_image
-
+import time
 
 class MorphCategoryControlPanel(wx.Panel):
     def __init__(self,
@@ -215,6 +216,11 @@ class MainFrame(wx.Frame):
 
     def on_erase_background(self, event: wx.Event):
         pass
+
+    def breathing(self, event: wx.Event):
+        time_now = time.time()
+        para = math.sin(time_now * 2.0 * math.pi * 0.5) * 0.5 + 0.5
+        self.poser.set_pose_parameter_value(PoseParameterCategory.BREATHING, 0, para)
 
     def init_control_panel(self):
         self.control_panel_sizer = wx.BoxSizer(wx.VERTICAL)
